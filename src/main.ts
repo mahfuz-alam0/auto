@@ -151,18 +151,23 @@ app.whenReady().then(() => {
 });
 
 autoUpdater.on("update-available", () => {
+  console.log("update-available");
   Logger.info("update-available")
 })
 autoUpdater.on("checking-for-update", () => {
-  Logger.info("update-available")
+  console.log("checking-for-update");
+  Logger.info("checking-for-update")
 })
 autoUpdater.on("download-progress", () => {
+  console.log("download-progress");
   Logger.info("download-progress")
 })
 autoUpdater.on("update-not-available", (progressTrack) => {
+  console.log("update-not-available");
   Logger.info("update-not-available", progressTrack)
 })
 autoUpdater.on("update-downloaded", () => {
+  console.log("update-downloaded");
   Logger.info("update-downloaded")
 })
 
