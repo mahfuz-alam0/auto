@@ -189,6 +189,11 @@ autoUpdater.on("error", (error: Error) => {
   Logger.error(`Update error: ${error.message}`);
 });
 
+autoUpdater.on('checking-for-update', () => {
+  mainWindow?.webContents.send('checking-for-update');
+  Logger.info("Checking for updates...");
+});
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });

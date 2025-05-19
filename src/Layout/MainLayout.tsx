@@ -3,6 +3,7 @@ import SocketHandler from '../components/SocketHandler/SocketHandler';
 import { useCommon } from '../contexts/CommonContext';
 import { Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import UpdateManager from '../components/updateManager/UpdateManager';
 
 
 const MainLayout: React.FC = () => {
@@ -17,6 +18,7 @@ const MainLayout: React.FC = () => {
         <>
             <Outlet />
             <SocketHandler />
+            <UpdateManager/>
         </>
     );
 };
