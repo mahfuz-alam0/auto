@@ -1,0 +1,77 @@
+@use "abstracts" as abs;
+@use "pages";
+@use "components";
+
+*::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: abs.$border-color;
+    border-radius: 10px;
+    transition: background 0.3s ease-in-out;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: abs.$primary-color;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: abs.$font-family;
+    background-color: abs.$back-color1;
+    color: white;
+
+    a {
+        color: #fff;
+        text-decoration: none;
+    }
+    
+    .container {
+        margin: auto;
+
+        @include abs.respond-to(mobile) {
+            max-width: 540px !important;
+        }
+
+        @include abs.respond-to(handheld) {
+            max-width: 960px !important;
+        }
+
+        @include abs.respond-to(smallDesktop) {
+            max-width: 1200px !important;
+        }
+
+        @include abs.respond-to(largeDesktop) {
+            max-width: 1200px !important;
+        }
+
+        @include abs.respond-to(extraLargeDesktop) {
+            max-width: 1440px !important;
+        }
+    }
+
+    .ant-modal-root {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1050; /* Ensure modal overlays on top */
+    }
+    
+    .ant-modal {
+        z-index: 1060; /* Higher z-index for modal content */
+        width: 600px;
+    }
+}

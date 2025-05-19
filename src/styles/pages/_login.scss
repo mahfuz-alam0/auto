@@ -1,0 +1,83 @@
+@use "../abstracts/" as abs;
+
+.loginContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+    .loginBox {
+        width: 400px;
+        padding: 30px;
+        border-radius: 12px;
+        background-color: abs.$primary-color;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        text-align: center;
+
+        .logoContainer {
+            img {
+                max-width: 150px;
+                margin-bottom: 20px;
+            }
+        }
+
+        .loginForm {
+            width: 100%;
+
+            .customInput {
+                background-color: transparent;
+                border: 2px solid abs.$border-color;
+                color: white;
+                padding: 10px;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+
+                &::placeholder {
+                    font-weight: 500;
+                    color: #fff;
+                }
+
+                input {
+                    font-weight: 500;
+                    color: #fff;
+
+                    &::placeholder {
+                        font-weight: 500;
+                        color: white !important;
+                        opacity: 0.7;
+                    }
+
+                }
+
+                .ant-input-suffix {
+                    color: #fff;
+
+                    svg {
+                        color: #fff;
+                    }
+                }
+            }
+
+            .actionButtons {
+                display: flex;
+                gap: 20px;
+                justify-content: center;
+
+                .loginButton {
+                    display: flex;
+                    gap: 3px;
+                    align-items: center;
+                    justify-content: center;
+
+                }
+
+            }
+
+
+            .autoStartCheckbox {
+                color: white;
+            }
+        }
+    }
+}

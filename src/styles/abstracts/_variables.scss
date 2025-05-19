@@ -1,0 +1,17 @@
+:root {
+    --dynamic-primary-color: #022349;
+    --dynamic-secondary-color: #012348;
+    --dynamic-back1-color: #181F2B;
+    --dynamic-back2-color: #0A0E13;
+}
+
+$primary-color: var(--dynamic-primary-color);
+$secondary-color: var(--dynamic-secondary-color);
+
+
+$back-color1: var(--dynamic-back1-color);
+$back-color2: var(--dynamic-back2-color);
+$border-color: #7D89A7;
+$orange: #FF8C4A;
+
+$font-family: 'Roboto', sans-serif;

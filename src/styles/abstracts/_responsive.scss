@@ -1,0 +1,85 @@
+$small-desktop: 992px;
+$large-desktop: 1200px;
+$extra-large-desktop: 1480px;
+
+$handheld: 768px;
+
+$tab-max: 1100px;
+
+$handhelds-landscape: 1024px;
+$mobile: 576px;
+$mobile-landscape: 480px;
+
+@mixin respond-to($media) {
+  @if $media ==largeDesktop {
+    @media only screen and (max-width: $large-desktop) {
+      @content;
+    }
+  }
+
+  @if $media ==extraLargeDesktop {
+    @media only screen and (min-width: $extra-large-desktop) {
+      @content;
+    }
+  }
+  @if $media ==extraLargeDesktop2 {
+    @media only screen and (max-width: $extra-large-desktop) {
+      @content;
+    }
+  }
+
+  @if $media ==smallDesktop {
+    @media only screen and (max-width: $small-desktop) {
+      @content;
+    }
+  }
+
+  @if $media ==handheld {
+    @media only screen and (max-width: $handheld) {
+      @content;
+    }
+  }
+
+  @if $media ==largeTab {
+    @media only screen and (max-width: $tab-max) {
+      @content;
+    }
+  }
+
+
+  @if $media ==mobile {
+    @media only screen and (max-width: $mobile) {
+      @content;
+    }
+  }
+  
+  @if $media ==mobile2 {
+    @media only screen and (min-width: $mobile) {
+      @content;
+    }
+  }
+
+  @if $media ==mobile-portrait {
+    @media only screen and (max-width: $mobile) and (orientation: portrait) {
+      @content;
+    }
+  }
+
+  @if $media ==mobile-landscape {
+    @media only screen and (min-width: 320px) and (max-width: $mobile-landscape) and (orientation: landscape) {
+      @content;
+    }
+  }
+
+  @if $media ==retina {
+    @media (-webkit-min-device-pixel-ratio: 2) {
+      @content;
+    }
+  }
+
+  @if $media ==iphone5 {
+    @media only screen and (device-aspect-ratio: 40/71) {
+      @content;
+    }
+  }
+}
