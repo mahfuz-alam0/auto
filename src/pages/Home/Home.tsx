@@ -7,10 +7,11 @@ import { Link } from "react-router-dom";
 import { useCommon } from "../../contexts/CommonContext";
 import { useFilter } from "../../Hooks/useFilter";
 import TestReceipt from "../../components/testPrint/TestReceipt";
+import UpdateManager from "./UpdateManager";
 
 
 const Home: React.FC = () => {
-    const { shops, choseWhatToDo, fetchPrinters, devices, printers,testSelected, setTestSelected } = useCommon();
+    const { shops, choseWhatToDo, fetchPrinters, devices, printers, testSelected, setTestSelected } = useCommon();
     const { filterData, setFilterData, isLoading, error } = useFilter(shops[0]);
 
     const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
@@ -62,6 +63,9 @@ const Home: React.FC = () => {
         <>
             <div className="existing-client-container">
                 <Goback title={"Existing Client"} />
+                <div>
+                    <UpdateManager />
+                </div>
                 <Row gutter={[16, 16]} align="middle" className="controls">
                     {/* Search Input */}
                     <Col xs={24} sm={12} md={8} className="input-col">

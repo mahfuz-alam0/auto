@@ -1,32 +1,38 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, IpcMainEvent } from 'electron';
 import path from 'node:path';
+import fs from 'fs';
 import started from 'electron-squirrel-startup';
 import { PrintReceiptType } from './types/common.type';
-import { autoUpdater } from 'electron-updater';
+import { autoUpdater, UpdateInfo, ProgressInfo } from 'electron-updater';
 import Logger from 'electron-log';
 
+// Configure logger
 Logger.initialize({});
 Logger.transports.file.level = 'info';
-Logger.transports.file.fileName = 'main.log';
 Logger.transports.file.format = '{h}:{i}:{s}:{ms} {text}';
 
-// Get platform-appropriate log path
-const logPath = path.join(app.getPath('userData'), 'logs/main.log');
+// Ensure logs directory exists
+const logDirectory = path.join(app.getPath('userData'), 'logs');
+fs.mkdirSync(logDirectory, { recursive: true });
+
+// Set log path
+const logPath = path.join(logDirectory, 'main.log');
 Logger.transports.file.resolvePath = () => logPath;
 
-Logger.log("Application version", app.getVersion())
 // Log initialization
-Logger.info(`Application started in ${process.env.NODE_ENV} mode`);
+Logger.info(`Application started in ${process.env.NODE_ENV || 'production'} mode`);
 Logger.info(`Log file location: ${logPath}`);
+Logger.info(`Application version ${app.getVersion()}`);
 
-declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string | undefined;
+declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
 declare const MAIN_WINDOW_VITE_NAME: string;
 
 if (started) {
   app.quit();
 }
 
-// Configure IPC handlers first
+let mainWindow: BrowserWindow;
+
 function configureIPC() {
   ipcMain.handle('get-printers', async () => {
     const mainWindow = BrowserWindow.getFocusedWindow();
@@ -118,10 +124,14 @@ function configureIPC() {
       });
     });
   });
+
+  ipcMain.handle('get-app-version', () => {
+    return { version: app.getVersion() };
+  });
 }
 
-function createWindow() {
-  const mainWindow = new BrowserWindow({
+function createWindow(): BrowserWindow {
+  const window = new BrowserWindow({
     width: 800,
     height: 600,
     icon: path.join(__dirname, 'src/static/icons/icon.png'),
@@ -130,55 +140,59 @@ function createWindow() {
       webSecurity: false,
       nodeIntegration: false,
       contextIsolation: true,
+      sandbox: true,
     },
   });
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+    window.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
-    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+    window.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
 
   if (process.env.NODE_ENV === 'development') {
-    mainWindow.webContents.openDevTools();
+    window.webContents.openDevTools();
   }
+
+  return window;
 }
 
 app.whenReady().then(() => {
   configureIPC();
-  createWindow();
+  mainWindow = createWindow();
   autoUpdater.checkForUpdatesAndNotify();
 });
 
-autoUpdater.on("update-available", () => {
-  console.log("update-available");
-  Logger.info("update-available")
-})
-autoUpdater.on("checking-for-update", () => {
-  console.log("checking-for-update");
-  Logger.info("checking-for-update")
-})
-autoUpdater.on("download-progress", () => {
-  console.log("download-progress");
-  Logger.info("download-progress")
-})
-autoUpdater.on("update-not-available", (progressTrack) => {
-  console.log("update-not-available", progressTrack);
-  Logger.info(`Download progress: ${(progressTrack)}%`);
-})
-autoUpdater.on("update-downloaded", () => {
-  console.log("update-downloaded");
-  Logger.info("update-downloaded")
-})
+// Auto-updater events with UI forwarding
+autoUpdater.on("update-available", (info: UpdateInfo) => {
+  mainWindow?.webContents.send('update-available', info);
+  Logger.info(`Update available: ${info.version}`);
+});
+
+autoUpdater.on("download-progress", (progress: ProgressInfo) => {
+  mainWindow?.webContents.send('download-progress', progress);
+  Logger.info(`Download progress: ${Math.round(progress.percent)}%`);
+});
+
+autoUpdater.on("update-not-available", () => {
+  mainWindow?.webContents.send('update-not-available');
+  Logger.info("No updates available");
+});
+
+autoUpdater.on("update-downloaded", (info: UpdateInfo) => {
+  mainWindow?.webContents.send('update-downloaded', info);
+  Logger.info(`Update downloaded: ${info.version}`);
+});
+
+autoUpdater.on("error", (error: Error) => {
+  mainWindow?.webContents.send('update-error', error.message);
+  Logger.error(`Update error: ${error.message}`);
+});
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  if (process.platform !== 'darwin') app.quit();
 });
 
 app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
