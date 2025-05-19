@@ -2,6 +2,21 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { PrintReceiptType } from './types/common.type';
+import { autoUpdater } from 'electron-updater';
+import Logger from 'electron-log';
+
+Logger.initialize({});
+Logger.transports.file.level = 'info';
+Logger.transports.file.fileName = 'main.log';
+Logger.transports.file.format = '{h}:{i}:{s}:{ms} {text}';
+
+// Get platform-appropriate log path
+const logPath = path.join(app.getPath('userData'), 'logs/main.log');
+Logger.transports.file.resolvePath = () => logPath;
+
+// Log initialization
+Logger.info(`Application started in ${process.env.NODE_ENV} mode`);
+Logger.info(`Log file location: ${logPath}`);
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string | undefined;
 declare const MAIN_WINDOW_VITE_NAME: string;
@@ -131,7 +146,24 @@ function createWindow() {
 app.whenReady().then(() => {
   configureIPC();
   createWindow();
+  autoUpdater.checkForUpdatesAndNotify();
 });
+
+autoUpdater.on("update-available", () => {
+Logger.info("update-available")
+})
+autoUpdater.on("checking-for-update", () => {
+Logger.info("update-available")
+})
+autoUpdater.on("download-progress", () => {
+Logger.info("download-progress")
+})
+autoUpdater.on("download-progress", () => {
+Logger.info("download-progress")
+})
+autoUpdater.on("update-downloaded", () => {
+Logger.info("update-downloaded")
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

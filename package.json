@@ -7,7 +7,7 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "build": "electron-forge make",
+    "build": "electron-forge make -p always",
     "build:win": "electron-forge make --platform=win32",
     "build:mac": "electron-forge make --platform=darwin",
     "build:lin": "electron-forge make --platform=linux",
@@ -18,6 +18,15 @@
   "author": {
     "name": "Bleaum",
     "email": "comms@bleaum.io"
+  },
+  "build": {
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "mahfuz-alam0",
+        "repo": "auto"
+      }
+    ]
   },
   "license": "MIT",
   "devDependencies": {
@@ -54,7 +63,9 @@
     "@vitejs/plugin-react": "^4.3.4",
     "antd": "^5.24.2",
     "axios": "^1.8.1",
+    "electron-log": "^5.4.0",
     "electron-squirrel-startup": "^1.0.1",
+    "electron-updater": "^6.6.2",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.0",
     "react": "^19.0.0",
