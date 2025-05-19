@@ -14,6 +14,7 @@ Logger.transports.file.format = '{h}:{i}:{s}:{ms} {text}';
 const logPath = path.join(app.getPath('userData'), 'logs/main.log');
 Logger.transports.file.resolvePath = () => logPath;
 
+Logger.log("Application version", app.getVersion())
 // Log initialization
 Logger.info(`Application started in ${process.env.NODE_ENV} mode`);
 Logger.info(`Log file location: ${logPath}`);
@@ -150,19 +151,19 @@ app.whenReady().then(() => {
 });
 
 autoUpdater.on("update-available", () => {
-Logger.info("update-available")
+  Logger.info("update-available")
 })
 autoUpdater.on("checking-for-update", () => {
-Logger.info("update-available")
+  Logger.info("update-available")
 })
 autoUpdater.on("download-progress", () => {
-Logger.info("download-progress")
+  Logger.info("download-progress")
 })
-autoUpdater.on("download-progress", () => {
-Logger.info("download-progress")
+autoUpdater.on("update-not-available", (progressTrack) => {
+  Logger.info("update-not-available", progressTrack)
 })
 autoUpdater.on("update-downloaded", () => {
-Logger.info("update-downloaded")
+  Logger.info("update-downloaded")
 })
 
 app.on('window-all-closed', () => {
