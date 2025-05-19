@@ -163,8 +163,8 @@ autoUpdater.on("download-progress", () => {
   Logger.info("download-progress")
 })
 autoUpdater.on("update-not-available", (progressTrack) => {
-  console.log("update-not-available");
-  Logger.info("update-not-available", progressTrack)
+  console.log("update-not-available", progressTrack);
+  Logger.info(`Download progress: ${(progressTrack)}%`);
 })
 autoUpdater.on("update-downloaded", () => {
   console.log("update-downloaded");
