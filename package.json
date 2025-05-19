@@ -7,7 +7,7 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "build": "electron-forge make -p always",
+    "build": "electron-forge make",
     "build:win": "electron-forge make --platform=win32",
     "build:mac": "electron-forge make --platform=darwin",
     "build:lin": "electron-forge make --platform=linux",
@@ -20,13 +20,24 @@
     "email": "comms@bleaum.io"
   },
   "build": {
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "mahfuz-alam0",
-        "repo": "auto"
-      }
-    ]
+    "publish": {
+      "provider": "github",
+      "owner": "mahfuz-alam0",
+      "repo": "auto"
+    },
+    "win": {
+      "target": "squirrel"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm",
+        "snap"
+      ]
+    }
   },
   "license": "MIT",
   "devDependencies": {
